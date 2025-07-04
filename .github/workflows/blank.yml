@@ -90,7 +90,6 @@ jobs:
           git submodule update
           mkdir build
           cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
-          make
           sudo make install
           # Vulkan VulkanTools
           cd $GITHUB_WORKSPACE
