@@ -51,7 +51,7 @@ jobs:
             libglew-dev libwayland-dev libxkbcommon-dev waylandpp-dev wayland-protocols \
             libgbm-dev libinput-dev libxkbcommon-dev git \
             doxygen libcap-dev libsndio-dev libmariadbd-dev \
-            libdav1d-dev qt6-default checkinstall \
+            libdav1d-dev checkinstall \
             libpcre3-dev libpcre3 rapidjson-dev libdisplay-info-dev \
             libx11-xcb-dev libxcb-keysyms1-dev xorg-dev \
             liblz4-dev libzstd-dev libxcb-glx0-dev
