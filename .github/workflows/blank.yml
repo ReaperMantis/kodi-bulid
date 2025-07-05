@@ -128,7 +128,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kodi-build
           # sudo make install
-          checkinstall --default --pkgname=kodi --pkgversion=21.2
+          sudo checkinstall --default --pkgname=kodi --pkgversion=21.2
           
       - name: Upload Kodi
         uses: actions/upload-artifact@v4.5.0
@@ -148,7 +148,7 @@ jobs:
       - name: Package Kodi-Addons
         run: |
           cd $GITHUB_WORKSPACE/kodi
-          checkinstall --default --pkgname=kodi-addons --pkgversion=21.2
+          sudo checkinstall --default --pkgname=kodi-addons --pkgversion=21.2
 
       - name: Upload Kodi Addons
         uses: actions/upload-artifact@v4.5.0
