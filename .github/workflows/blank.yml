@@ -129,6 +129,7 @@ jobs:
           cd $GITHUB_WORKSPACE/kodi-build
           # sudo make install
           sudo checkinstall --default --pkgname=kodi --pkgversion=21.2
+          mv /home/runner/work/kodi-bulid/kodi-bulid/kodi-build/*.deb $GITHUB_WORKSPACE/kodi-build/
           
       - name: Upload Kodi
         uses: actions/upload-artifact@v4.5.0
