@@ -89,8 +89,9 @@ jobs:
           git submodule update --init
           git submodule update
           mkdir build
-          cmake --build . build -DCMAKE_BUILD_TYPE=Release
-          sudo cmake --install build/
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          sudo cmake --install build
           # Vulkan VulkanTools
           cd $GITHUB_WORKSPACE
           git clone https://github.com/LunarG/VulkanTools.git
