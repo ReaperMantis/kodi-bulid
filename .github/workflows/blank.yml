@@ -106,6 +106,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           git clone --depth 1 --branch 21.2-Omega https://github.com/xbmc/xbmc.git kodi
+          cd kodi
           # Build and install crossguid:
           sudo make -C tools/depends/target/crossguid PREFIX=/usr/local
           # Build and install flatbuffers:
