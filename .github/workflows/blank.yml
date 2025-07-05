@@ -123,9 +123,14 @@ jobs:
           cd $GITHUB_WORKSPACE/kodi-build
           cmake ../kodi -DCMAKE_INSTALL_PREFIX=/usr/local -DCORE_PLATFORM_NAME="x11 wayland gbm" -DAPP_RENDER_SYSTEM=gl
           cmake --build . -- VERBOSE=1 -j$(getconf _NPROCESSORS_ONLN)
-          checkinstall --default --pkgname=kodi --pkgversion=21.2
           cd $GITHUB_WORKSPACE
           sudo make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=/usr/local
+
+      - name: Package Kodi
+        run: |
+          cd $GITHUB_WORKSPACE/kodi-build
+          checkinstall --default --pkgname=kodi --pkgversion=21.2
+          cd $GITHUB_WORKSPACE/kodi
           checkinstall --default --pkgname=kodi-addons --pkgversion=21.2
 
       - name: Upload Kodi
