@@ -110,15 +110,15 @@ jobs:
           # Build and install crossguid:
           sudo make -C tools/depends/target/crossguid PREFIX=/usr/local
           # Build and install flatbuffers:
-          sudo make -C tools/depends/target/flatbuffers PREFIX=/usr/local
+          # sudo make -C tools/depends/target/flatbuffers PREFIX=/usr/local
           # Build and install libfmt:
-          sudo make -C tools/depends/target/fmt PREFIX=/usr/local
+          # sudo make -C tools/depends/target/fmt PREFIX=/usr/local
           # Build and install libspdlog:
-          sudo make -C tools/depends/target/spdlog PREFIX=/usr/local
+          # sudo make -C tools/depends/target/spdlog PREFIX=/usr/local
           # Build and install wayland-protocols:
-          sudo make -C tools/depends/target/wayland-protocols PREFIX=/usr/local
+          # sudo make -C tools/depends/target/wayland-protocols PREFIX=/usr/local
           # Build and install waylandpp:
-          sudo make -C tools/depends/target/waylandpp PREFIX=/usr/local
+          # sudo make -C tools/depends/target/waylandpp PREFIX=/usr/local
           mkdir $GITHUB_WORKSPACE/kodi-build
           cd $GITHUB_WORKSPACE/kodi-build
           cmake ../kodi -DCMAKE_INSTALL_PREFIX=/usr/local -DCORE_PLATFORM_NAME="x11 wayland gbm" -DAPP_RENDER_SYSTEM=gl
