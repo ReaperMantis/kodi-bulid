@@ -126,7 +126,7 @@ jobs:
       - name: Package Kodi
         run: |
           mkdir -p "$GITHUB_WORKSPACE/output/kodi-build"
-          cd $GITHUB_WORKSPACE/output/kodi-build
+          cd $GITHUB_WORKSPACE/kodi-build
           # sudo make install
           sudo checkinstall --default --pkgname=kodi --pkgversion=21.2
           # Find and move all .deb files recursively
