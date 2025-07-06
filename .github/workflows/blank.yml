@@ -24,8 +24,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      # Runs a set of commands using the runners shell
+      
       - name: Install Pre-Requisites
         run: |
           sudo apt update
@@ -56,51 +55,51 @@ jobs:
             libx11-xcb-dev libxcb-keysyms1-dev xorg-dev \
             liblz4-dev libzstd-dev libxcb-glx0-dev
 
-      - name: Install Vulkan SDK
-        run: |
-          # Vulkan Headers
-          cd $GITHUB_WORKSPACE
-          git clone https://github.com/KhronosGroup/Vulkan-Headers.git
-          cd Vulkan-Headers/
-          # Configure the project
-          cmake -S . -B build/
-          # Because Vulkan-Headers is header only we don't need to build anything.
-          # Users can install it where they need to.
-          cmake --install build --prefix build/install
-          # Vulkan Loader
-          cd $GITHUB_WORKSPACE
-          git clone https://github.com/KhronosGroup/Vulkan-Loader.git
-          cd Vulkan-Loader
-          mkdir build
-          cd build
-          cmake -D UPDATE_DEPS=ON ..
-          make
-          sudo make install
-          # Vulkan Validation Layers
-          cd $GITHUB_WORKSPACE
-          git clone https://github.com/KhronosGroup/Vulkan-ValidationLayers.git
-          cd Vulkan-ValidationLayers
-          cmake -S . -B build -D UPDATE_DEPS=ON -D BUILD_WERROR=ON -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug
-          cmake --build build --config Debug
-          # Vulkan gfxreconstruct
-          cd $GITHUB_WORKSPACE
-          git clone https://github.com/LunarG/gfxreconstruct.git
-          cd gfxreconstruct
-          git submodule update --init
-          git submodule update
-          mkdir build
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-          sudo cmake --install build
-          # Vulkan VulkanTools
-          cd $GITHUB_WORKSPACE
-          git clone https://github.com/LunarG/VulkanTools.git
-          cd VulkanTools
-          cmake -S . -B build -D UPDATE_DEPS=ON -D BUILD_WERROR=ON -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug
-          cmake --build build --config Debug
-          # EX: Installs Release artifacts into `build/install` directory.
-          # NOTE: --config is only needed for multi-config generators (Visual Studio, Xcode, etc)
-          sudo cmake --install build/ --config Release --prefix build/install
+      # - name: Install Vulkan SDK
+      #   run: |
+      #     # Vulkan Headers
+      #     cd $GITHUB_WORKSPACE
+      #     git clone https://github.com/KhronosGroup/Vulkan-Headers.git
+      #     cd Vulkan-Headers/
+      #     # Configure the project
+      #     cmake -S . -B build/
+      #     # Because Vulkan-Headers is header only we don't need to build anything.
+      #     # Users can install it where they need to.
+      #     cmake --install build --prefix build/install
+      #     # Vulkan Loader
+      #     cd $GITHUB_WORKSPACE
+      #     git clone https://github.com/KhronosGroup/Vulkan-Loader.git
+      #     cd Vulkan-Loader
+      #     mkdir build
+      #     cd build
+      #     cmake -D UPDATE_DEPS=ON ..
+      #     make
+      #     sudo make install
+      #     # Vulkan Validation Layers
+      #     cd $GITHUB_WORKSPACE
+      #     git clone https://github.com/KhronosGroup/Vulkan-ValidationLayers.git
+      #     cd Vulkan-ValidationLayers
+      #     cmake -S . -B build -D UPDATE_DEPS=ON -D BUILD_WERROR=ON -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug
+      #     cmake --build build --config Debug
+      #     # Vulkan gfxreconstruct
+      #     cd $GITHUB_WORKSPACE
+      #     git clone https://github.com/LunarG/gfxreconstruct.git
+      #     cd gfxreconstruct
+      #     git submodule update --init
+      #     git submodule update
+      #     mkdir build
+      #     cmake -B build -DCMAKE_BUILD_TYPE=Release
+      #     cmake --build build
+      #     sudo cmake --install build
+      #     # Vulkan VulkanTools
+      #     cd $GITHUB_WORKSPACE
+      #     git clone https://github.com/LunarG/VulkanTools.git
+      #     cd VulkanTools
+      #     cmake -S . -B build -D UPDATE_DEPS=ON -D BUILD_WERROR=ON -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Debug
+      #     cmake --build build --config Debug
+      #     # EX: Installs Release artifacts into `build/install` directory.
+      #     # NOTE: --config is only needed for multi-config generators (Visual Studio, Xcode, etc)
+      #     sudo cmake --install build/ --config Release --prefix build/install
 
       - name: Build Kodi
         run: |
@@ -126,17 +125,22 @@ jobs:
 
       - name: Package Kodi
         run: |
-          cd $GITHUB_WORKSPACE/kodi-build
+          mkdir -p "$GITHUB_WORKSPACE/output/kodi-build"
+          cd $GITHUB_WORKSPACE/output/kodi-build
           # sudo make install
           sudo checkinstall --default --pkgname=kodi --pkgversion=21.2
-          mv /home/runner/work/kodi-bulid/kodi-bulid/kodi-build/*.deb $GITHUB_WORKSPACE/kodi-build/
+          # Find and move all .deb files recursively
+          find . -type f -name "*.deb" -print0 | while IFS= read -r -d '' file; do
+              echo "Moving: $file"
+              mv "$file" "$GITHUB_WORKSPACE/output/kodi-build/"
+          done
           
       - name: Upload Kodi
         uses: actions/upload-artifact@v4.5.0
         with:
         # A file, directory or wildcard pattern that describes what to upload
           name: kodi
-          path: $GITHUB_WORKSPACE/kodi-build/*.deb
+          path: $GITHUB_WORKSPACE/output/kodi-build/*.deb
           compression-level: 0
           # The desired behavior if no files are found using the provided path.
           if-no-files-found: error
@@ -148,15 +152,21 @@ jobs:
 
       - name: Package Kodi-Addons
         run: |
+          mkdir -p "$GITHUB_WORKSPACE/output/kodi-addons"
           cd $GITHUB_WORKSPACE/kodi
           sudo checkinstall --default --pkgname=kodi-addons --pkgversion=21.2
+          # Find and move all .deb files recursively
+          find . -type f -name "*.deb" -print0 | while IFS= read -r -d '' file; do
+              echo "Moving: $file"
+              mv "$file" "$GITHUB_WORKSPACE/output/kodi-addons/"
+          done
 
       - name: Upload Kodi Addons
         uses: actions/upload-artifact@v4.5.0
         with:
         # A file, directory or wildcard pattern that describes what to upload
           name: kodi-addons
-          path: $GITHUB_WORKSPACE/kodi/*.deb
+          path: $GITHUB_WORKSPACE/output/kodi-addons/*.deb
           compression-level: 0
           # The desired behavior if no files are found using the provided path.
           if-no-files-found: error
