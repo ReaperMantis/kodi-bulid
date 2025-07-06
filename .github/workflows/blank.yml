@@ -153,11 +153,11 @@ jobs:
           tree "$GITHUB_WORKSPACE/output"
           
       - name: Upload Kodi
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.2
         with:
         # A file, directory or wildcard pattern that describes what to upload
           name: kodi
-          path: $GITHUB_WORKSPACE/output/kodi-build/*
+          path: ${{ github.workspace }}/output/kodi-build/*.deb
           compression-level: 0
           # The desired behavior if no files are found using the provided path.
           if-no-files-found: error
@@ -179,11 +179,11 @@ jobs:
           done
 
       - name: Upload Kodi Addons
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.2
         with:
         # A file, directory or wildcard pattern that describes what to upload
           name: kodi-addons
-          path: $GITHUB_WORKSPACE/output/kodi-addons/*.deb
+          path: ${{ github.workspace }}/output/kodi-addons/*.deb
           compression-level: 0
           # The desired behavior if no files are found using the provided path.
           if-no-files-found: error
